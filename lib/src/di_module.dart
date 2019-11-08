@@ -5,15 +5,16 @@ import 'package:veider/resolvers/resolving_context.dart';
 /// DiModule is an abstraction for user extension, that defines all dependencies
 /// in register() method
 abstract class DiModule {
-  final DiContainer _container;
+  final DiContainer container;
 
+  @mustCallSuper
   DiModule([DiContainer container]) :
-    _container = container ?? new DiContainer();
+    container = container ?? new DiContainer();
 
   /// Return resolving context that helps
   /// define dependencies in fluent builder style
   @protected ResolvingContext<T> bind<T>() { 
-    return new ResolvingContext<T>(_container);
+    return new ResolvingContext<T>(container);
   }
 
   /// In this method override user configure all dependencies for the module
@@ -23,9 +24,9 @@ abstract class DiModule {
   /// configured in the register method
   void install() {
      register();
-     _container.onRegister();
+     container.onRegister();
   }
 
   /// Delegates dependency resolving to the DiContainer
-  T resolve<T>() => _container.resolve<T>();
+  T resolve<T>() => container.resolve<T>();
 }

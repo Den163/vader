@@ -70,12 +70,45 @@ void main() {
     expect(spy.checkedOnFactory, false);
     expect(module.resolve<Spy>().checkedOnFactory, true);
   });
+
+  test('Child container can resolve parent container\'s value', () {
+    final moduleA = new ModuleMock();
+    final b = new B();
+    when(moduleA.register())
+      .thenAnswer((_) => moduleA.bind<A>().toValue(b));
+    moduleA.install();
+
+    final containerB = new DiContainer(moduleA.container);
+    final moduleB = new ModuleMock(containerB);
+    final a = moduleB.resolve<A>();
+
+    expect(b, a);
+  });
+
+  test('To binds interface to another type of instance', () {
+    final module = new ModuleMock();
+    when(module.register())
+      .thenAnswer((_) {
+        module.bind<A>().toValue(new B());
+        module.bind<C>().toValue(new C());
+        module.bind<A>().to<C>();
+      });
+    module.install();
+
+    expect(
+      module.resolve<A>(),
+      isInstanceOf<C>()
+    );
+  });
 }
 
-class ModuleMock extends DiModule with Mock {}
+class ModuleMock extends DiModule with Mock {
+  ModuleMock([DiContainer container]) : super(container);
+}
 
 abstract class A {}
 class B implements A {}
+class C implements A {}
 
 class DependOnA {
   final A a;

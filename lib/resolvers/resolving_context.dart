@@ -1,4 +1,6 @@
 
+import 'package:veider/resolvers/resolvers.dart';
+import 'package:veider/resolvers/to_resolver.dart';
 import 'package:veider/resolvers/value_resolver.dart';
 import 'package:veider/src/di_container.dart';
 
@@ -15,9 +17,9 @@ class ResolvingContext<T> extends Resolver<T> {
     _container.add(this);
   }
 
-  // TODO implement to behavior
-  ResolvingContext to<TImpl>() {
-    throw UnimplementedError();
+  ResolvingContext to<TImpl extends T>() {
+    _resolver = new ToResolver<T, TImpl>(_container);
+    return this;
   }
   
   ResolvingContext toValue<TImpl extends T>(TImpl value) {
@@ -29,11 +31,6 @@ class ResolvingContext<T> extends Resolver<T> {
   ResolvingContext toPureFactory(T Function() factory) {
     _resolver = new FactoryResolver(factory);
     return this;
-  }
-
-  // TODO implement singleton behavior
-  ResolvingContext asSingleton<T>() {
-    throw UnimplementedError();
   }
 
   ResolvingContext lazy<T>() {
