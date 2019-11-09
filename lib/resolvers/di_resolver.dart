@@ -5,4 +5,5 @@ import 'package:meta/meta.dart';
 abstract class Resolver<T> {
   T resolve();
   @protected void onRegister() {}
+  @protected void dispose() {}
 }

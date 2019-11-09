@@ -8,7 +8,12 @@ class DiContainer {
 
   DiContainer([this._parent]);
 
+  /// Add dependency resolver to the container.
+  /// Note that value overwriting within same container is prohibited
   void add<T>(ResolvingContext<T> context) {
+    if (_resolvers.containsKey(T))
+      throw StateError('Dependency of type `$T` is already exist in container');
+
     _resolvers[T] = context;
   }
 
@@ -36,5 +41,9 @@ class DiContainer {
       v.verify();
       v.onRegister();
     });
+  }
+
+  void dispose() {
+
   }
 }

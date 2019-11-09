@@ -5,7 +5,7 @@ import 'package:veider/veider.dart';
 import 'resolvers_test.dart';
 
 void main() {
-  test('Bind without value resolve throws exception', () {
+  test('Bind without any else actions throws exception', () {
     final module = new ModuleMock();
     when(module.register())
       .thenAnswer((_) => module.bind<A>());
@@ -26,6 +26,20 @@ void main() {
     expect(
       module.resolve<A>(),
       b
+    );
+  });
+
+  test('Bind to the same type in the same container throws error', () {
+    final module = new ModuleMock();
+    when(module.register()).thenAnswer(
+        (_) {
+          module.bind<A>().toValue(new B());
+          module.bind<A>().toValue(new B());
+        });
+
+    expect(
+      () => module.install(),
+      throwsA(isInstanceOf<StateError>())
     );
   });
 
@@ -58,17 +72,18 @@ void main() {
     );
   });
 
-  test('Bind to the lazy resolves value after resolve', () {
+  test('Bind to the lazy resolves value after resolve() call', () {
     final module = new ModuleMock();
-    final spy = new Spy();
+    final spy = new SpyMock();
     when(module.register())
       .thenAnswer((_) {
-        module.bind<Spy>().toPureFactory(() => spy..onFactory()).lazy();
+        module.bind<SpyMock>().toPureFactory(() => spy..onFactory()).lazy();
       });
     module.install();
 
-    expect(spy.checkedOnFactory, false);
-    expect(module.resolve<Spy>().checkedOnFactory, true);
+    expect(spy.counter, 0);
+    module.resolve<SpyMock>();
+    expect(spy.counter, 1);
   });
 
   test('Child container can resolve parent container\'s value', () {
@@ -85,18 +100,26 @@ void main() {
     expect(b, a);
   });
 
-  test('To binds interface to another type of instance', () {
-    final module = new ModuleMock();
-    when(module.register())
+  test('To binds interface to another type of instance resolved earlier', () {
+    final containerA = new DiContainer();
+    final moduleA = new ModuleMock(containerA);
+    when(moduleA.register())
       .thenAnswer((_) {
-        module.bind<A>().toValue(new B());
-        module.bind<C>().toValue(new C());
-        module.bind<A>().to<C>();
+        moduleA.bind<A>().toValue(new B());
+        moduleA.bind<C>().toValue(new C());
+    });
+
+    final moduleB = new ModuleMock(new DiContainer(containerA));
+    when(moduleB.register())
+      .thenAnswer((_) {
+        moduleB.bind<A>().to<C>();
       });
-    module.install();
+
+    moduleA.install();
+    moduleB.install();
 
     expect(
-      module.resolve<A>(),
+      moduleB.resolve<A>(),
       isInstanceOf<C>()
     );
   });

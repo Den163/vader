@@ -7,9 +7,8 @@ import 'package:veider/resolvers/resolving_context.dart';
 abstract class DiModule {
   final DiContainer container;
 
-  @mustCallSuper
   DiModule([DiContainer container]) :
-    container = container ?? new DiContainer();
+    this.container = container ?? new DiContainer();
 
   /// Return resolving context that helps
   /// define dependencies in fluent builder style

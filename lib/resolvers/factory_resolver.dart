@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import 'di_resolver.dart';
 
 /// Resolves dependency with factory function
