@@ -12,20 +12,21 @@ abstract class DiModule {
 
   /// Return resolving context that helps
   /// define dependencies in fluent builder style
-  @protected ResolvingContext<T> bind<T>() { 
+  @visibleForTesting @protected ResolvingContext<T> bind<T>() {
     return new ResolvingContext<T>(container);
   }
 
   /// In this method override user configure all dependencies for the module
-  @protected void register();
+  @visibleForTesting @protected void register();
 
   /// Method for user code all other libraries to install all dependencies
   /// configured in the register method
   void install() {
      register();
-     container.onRegister();
   }
 
   /// Delegates dependency resolving to the DiContainer
   T resolve<T>() => container.resolve<T>();
+
+  void dispose() => container.dispose();
 }

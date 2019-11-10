@@ -2,20 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:veider/veider.dart';
 
-import 'resolvers_test.dart';
 
 void main() {
-  test('Bind without any else actions throws exception', () {
-    final module = new ModuleMock();
-    when(module.register())
-      .thenAnswer((_) => module.bind<A>());
-
-    expect(
-      () => module.install(),
-      throwsA(isInstanceOf<StateError>())
-    );
-  });
-
   test('Bind to the value resolves with value', () {
     final b = new B();
     final module = new ModuleMock();
@@ -72,20 +60,6 @@ void main() {
     );
   });
 
-  test('Bind to the lazy resolves value after resolve() call', () {
-    final module = new ModuleMock();
-    final spy = new SpyMock();
-    when(module.register())
-      .thenAnswer((_) {
-        module.bind<SpyMock>().toPureFactory(() => spy..onFactory()).lazy();
-      });
-    module.install();
-
-    expect(spy.counter, 0);
-    module.resolve<SpyMock>();
-    expect(spy.counter, 1);
-  });
-
   test('Child container can resolve parent container\'s value', () {
     final moduleA = new ModuleMock();
     final b = new B();
@@ -98,30 +72,6 @@ void main() {
     final a = moduleB.resolve<A>();
 
     expect(b, a);
-  });
-
-  test('To binds interface to another type of instance resolved earlier', () {
-    final containerA = new DiContainer();
-    final moduleA = new ModuleMock(containerA);
-    when(moduleA.register())
-      .thenAnswer((_) {
-        moduleA.bind<A>().toValue(new B());
-        moduleA.bind<C>().toValue(new C());
-    });
-
-    final moduleB = new ModuleMock(new DiContainer(containerA));
-    when(moduleB.register())
-      .thenAnswer((_) {
-        moduleB.bind<A>().to<C>();
-      });
-
-    moduleA.install();
-    moduleB.install();
-
-    expect(
-      moduleB.resolve<A>(),
-      isInstanceOf<C>()
-    );
   });
 }
 

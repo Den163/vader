@@ -1,8 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mockito/mockito.dart' as mockito;
 import 'package:veider/resolvers/resolvers.dart';
+import 'package:veider/resolvers/singleton_resolver.dart';
 
 void main() {
   test('Value resolver resolves with selected value', () {
@@ -18,7 +17,6 @@ void main() {
   test('Factory resolver resolves with factory', () {
     const expected = 3;
     final factoryResolver = new FactoryResolver(() => expected);
-    factoryResolver.onRegister();
 
     expect(
       factoryResolver.resolve(),
@@ -26,57 +24,41 @@ void main() {
     );
   });
 
-  test('Factory creates immediatly, without waiting for resolve() call', () {
+  test('Factory creates value only after resolve() call', () {
     final spy = new SpyMock();
     final factoryResolver = new FactoryResolver(() => spy.onFactory());
-    factoryResolver.onRegister();
 
-    expect(spy.counter, 1);
+    mockito.verifyNever(spy.onFactory());
+    factoryResolver.resolve();
+    mockito.verify(spy.onFactory());
   });
 
-  test('Factory resolver resolves same value after multiple resolve() calls', () {
+  test('Not singleton resolver resolves different values after multiple resolve() calls', () {
+    const callCount = 3;
     final spy = new SpyMock();
-    final factoryResolver = new FactoryResolver(() => spy.onFactory());
-    factoryResolver.onRegister();
+    final factoryResolver = new FactoryResolver(() => spy..onFactory());
 
-    factoryResolver.resolve();
-    factoryResolver.resolve();
-    factoryResolver.resolve();
+    for (var i = 0; i < callCount; i++) factoryResolver.resolve();
 
-    expect(spy.counter, 1);
+    mockito.verify(spy.onFactory()).called(callCount);
   });
 
-  test('Lazy resolver creates value only after resolve() call', () {
+  test('Singleton resolver resolves same value after multiple resolve() calls', () {
+    const callCount = 3;
     final spy = new SpyMock();
-    final factoryResolver = new FactoryResolver(() => spy.onFactory());
-    final lazyResolver = new LazyResolver(factoryResolver);
+    final singletonResolver = new SingletonResolver(
+      new FactoryResolver(() => spy..onFactory())
+    );
 
-    expect(spy.counter, 0);
-    lazyResolver.resolve();
-    expect(spy.counter, 1);
-  });
+    for (var i = 0; i < callCount; i++) singletonResolver.resolve();
 
-  test('Lazy resolver resolves same value after multiple resolve() call', () {
-    final spy = new SpyMock();
-    final factoryResolver = new FactoryResolver(() => spy.onFactory());
-    final lazyResolver = new LazyResolver(factoryResolver);
-
-    lazyResolver.resolve();
-    lazyResolver.resolve();
-    lazyResolver.resolve();
-
-    expect(spy.counter, 1);
+    mockito.verify(spy.onFactory()).called(1);
   });
 }
 
 
 abstract class Spy {
-  int get counter;
   void onFactory();
+  void dispose();
 }
-class SpyMock extends Mock  implements Spy {
-  @override int get counter => _counter;
-
-  var _counter = 0;
-  void onFactory() => _counter++;
-}
+class SpyMock extends mockito.Mock implements Spy {}

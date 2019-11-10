@@ -1,12 +1,10 @@
-
 import 'package:veider/resolvers/resolvers.dart';
-import 'package:veider/resolvers/to_resolver.dart';
+import 'package:veider/resolvers/singleton_resolver.dart';
 import 'package:veider/resolvers/value_resolver.dart';
 import 'package:veider/src/di_container.dart';
 
 import 'di_resolver.dart';
 import 'factory_resolver.dart';
-import 'lazy_resolver.dart';
 
 /// Facade with factories for all other resolvers
 class ResolvingContext<T> extends Resolver<T> {
@@ -17,43 +15,35 @@ class ResolvingContext<T> extends Resolver<T> {
     _container.add(this);
   }
 
-  ResolvingContext to<TImpl extends T>() {
-    _resolver = new ToResolver<T, TImpl>(_container);
-    return this;
-  }
-  
-  ResolvingContext toValue<TImpl extends T>(TImpl value) {
-    _resolver = new ValueResolver(value);
+  ResolvingContext<T> toValue<TImpl extends T>(TImpl value) {
+    _resolver = new ValueResolver<TImpl>(value);
     return this;
   }
 
   // Create factory resolver without any dependencies
-  ResolvingContext toPureFactory(T Function() factory) {
-    _resolver = new FactoryResolver(factory);
+  ResolvingContext<T> toPureFactory<TImpl extends T>(TImpl Function() factory) {
+    _resolver = new FactoryResolver<TImpl>(factory);
     return this;
   }
 
-  ResolvingContext lazy<T>() {
-    verify();
-    _resolver = new LazyResolver(_resolver);
+  ResolvingContext<T> withDispose<TImpl extends T>(void Function(TImpl) dispose) {
+    _container.addDispose<T>(dispose);
     return this;
   }
 
-  @override
-  void onRegister() => _resolver.onRegister();
+  ResolvingContext<T> asSingleton() {
+    if (_resolver == null)
+      throw StateError('Can\'t make singleton from null resolver');
+
+    _resolver = new SingletonResolver(_resolver);
+    return this;
+  }
 
   @override
   T resolve() {
     verify();
 
     return _resolver.resolve();
-  }
-
-  void _verifyCreation() {
-    if (_resolver != null) throw new StateError(
-        'Can\'t resolve `$T` twice. '
-            'Possibly it was resolved with factory or value earlier.'
-    );
   }
 
   void verify() {
