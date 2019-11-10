@@ -1,8 +1,11 @@
 import 'package:veider/resolvers/resolving_context.dart';
+import 'package:veider/src/utils/disposable.dart';
 
 /// DiContainer is a data structure that keep all dependencies resolvers
 class DiContainer {
-  final Map<Type, ResolvingContext> _resolvers = {};
+  final _resolvers = <Type, ResolvingContext> {};
+  final _disposables = <Type, Disposable>{};
+
   DiContainer get parent => _parent;
   DiContainer _parent;
 
@@ -15,6 +18,13 @@ class DiContainer {
       throw StateError('Dependency of type `$T` is already exist in container');
 
     _resolvers[T] = context;
+  }
+
+  void addDisposable<T>(Disposable disposable) {
+    if (_disposables.containsKey(T))
+      throw StateError('Disposable of type `$T` is already exist in container');
+
+    _disposables[T] = disposable;
   }
 
   T resolve<T>() {
@@ -44,6 +54,6 @@ class DiContainer {
   }
 
   void dispose() {
-
+    _disposables.values.forEach((v) => v.dispose());
   }
 }

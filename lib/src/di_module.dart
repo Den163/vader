@@ -28,4 +28,7 @@ abstract class DiModule {
 
   /// Delegates dependency resolving to the DiContainer
   T resolve<T>() => container.resolve<T>();
+
+
+  void dispose() => container.dispose();
 }

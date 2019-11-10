@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:veider/resolvers/resolvers.dart';
@@ -72,11 +70,16 @@ void main() {
 
 abstract class Spy {
   int get counter;
+  bool get disposed;
   void onFactory();
 }
 class SpyMock extends Mock  implements Spy {
   @override int get counter => _counter;
+  @override bool get disposed => _disposed;
 
   var _counter = 0;
+  var _disposed = false;
+
   void onFactory() => _counter++;
+  void dispose() => _disposed = true;
 }

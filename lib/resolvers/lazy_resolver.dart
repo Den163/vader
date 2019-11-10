@@ -16,5 +16,4 @@ class LazyResolver<T> extends Resolver<T> {
 
     return _value;
   }
-
 }

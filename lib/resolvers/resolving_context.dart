@@ -1,4 +1,3 @@
-
 import 'package:veider/resolvers/resolvers.dart';
 import 'package:veider/resolvers/to_resolver.dart';
 import 'package:veider/resolvers/value_resolver.dart';
@@ -17,23 +16,23 @@ class ResolvingContext<T> extends Resolver<T> {
     _container.add(this);
   }
 
-  ResolvingContext to<TImpl extends T>() {
+  ResolvingContext<T> to<TImpl extends T>() {
     _resolver = new ToResolver<T, TImpl>(_container);
     return this;
   }
-  
-  ResolvingContext toValue<TImpl extends T>(TImpl value) {
-    _resolver = new ValueResolver(value);
+
+  ResolvingContext<T> toValue<TImpl extends T>(TImpl value) {
+    _resolver = new ValueResolver<TImpl>(value);
     return this;
   }
 
   // Create factory resolver without any dependencies
-  ResolvingContext toPureFactory(T Function() factory) {
-    _resolver = new FactoryResolver(factory);
+  ResolvingContext<T> toPureFactory<TImpl extends T>(TImpl Function() factory) {
+    _resolver = new FactoryResolver<TImpl>(factory);
     return this;
   }
 
-  ResolvingContext lazy<T>() {
+  ResolvingContext<T> lazy<TImpl extends T>() {
     verify();
     _resolver = new LazyResolver(_resolver);
     return this;
@@ -47,13 +46,6 @@ class ResolvingContext<T> extends Resolver<T> {
     verify();
 
     return _resolver.resolve();
-  }
-
-  void _verifyCreation() {
-    if (_resolver != null) throw new StateError(
-        'Can\'t resolve `$T` twice. '
-            'Possibly it was resolved with factory or value earlier.'
-    );
   }
 
   void verify() {

@@ -123,6 +123,21 @@ void main() {
       isInstanceOf<C>()
     );
   });
+
+  test('All resolving values will dipose while module disposing', () {
+    final module = new ModuleMock();
+    final spy = new SpyMock();
+
+    when(module.register()).thenAnswer(
+      (_) => module.bind<Spy>()
+                   .toPureFactory<SpyMock>(() => spy)
+    );
+
+    module.install();
+    module.dispose();
+
+    expect(spy.disposed, true);
+  });
 }
 
 class ModuleMock extends DiModule with Mock {
