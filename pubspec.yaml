@@ -1,7 +1,7 @@
 name: veider
 description: A simple dependency injection library for personal needs
 version: 0.0.1
-author: Den163 <abramov.denis163@gmail.com>
+author: "Den163 <abramov.denis163@gmail.com>"
 homepage: https://github.com/Den163/veider_dart
 
 environment:
