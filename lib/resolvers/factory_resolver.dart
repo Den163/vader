@@ -7,9 +7,5 @@ class FactoryResolver<T> extends Resolver<T> {
   FactoryResolver(this._factory);
 
   @override
-  void onRegister() {
-  }
-
-  @override
   T resolve() => _factory();
 }

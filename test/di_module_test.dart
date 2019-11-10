@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:veider/veider.dart';
 
-import 'resolvers_test.dart';
 
 void main() {
   test('Bind without any else actions throws exception', () {

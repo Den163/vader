@@ -16,7 +16,6 @@ void main() {
   test('Factory resolver resolves with factory', () {
     const expected = 3;
     final factoryResolver = new FactoryResolver(() => expected);
-    factoryResolver.onRegister();
 
     expect(
       factoryResolver.resolve(),
@@ -27,7 +26,6 @@ void main() {
   test('Factory creates value only after resolve() call', () {
     final spy = new SpyMock();
     final factoryResolver = new FactoryResolver(() => spy.onFactory());
-    factoryResolver.onRegister();
 
     mockito.verifyNever(spy.onFactory());
     factoryResolver.resolve();
@@ -37,8 +35,6 @@ void main() {
   test('Not singleton resolver resolves different values after multiple resolve() calls', () {
     final spy = new SpyMock();
     final factoryResolver = new FactoryResolver(() => spy.onFactory());
-    factoryResolver.onRegister();
-
     const callCount = 3;
 
     for (var i = 0; i < 3; i++) factoryResolver.resolve();

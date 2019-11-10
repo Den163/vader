@@ -1,8 +1,11 @@
 import 'package:veider/resolvers/resolvers.dart';
+import 'package:veider/src/utils/disposable.dart';
 
 /// DiContainer is a data structure that keep all dependencies resolvers
 class DiContainer {
   final _resolvers = <Type, Resolver> {};
+  final _typesToDispose = <Type, void Function(Object)>{};
+  final _disposables = <Type, List<Disposable>> {};
 
   DiContainer get parent => _parent;
   DiContainer _parent;
@@ -12,10 +15,15 @@ class DiContainer {
   /// Add dependency resolver to the container.
   /// Note that value overwriting within same container is prohibited
   void add<T>(Resolver<T> context) {
-    if (_resolvers.containsKey(T))
+    if (hasInTree<T>())
       throw StateError('Dependency of type `$T` is already exist in container');
 
     _resolvers[T] = context;
+  }
+
+  void addDispose<T>(void Function(T) disposeFunc) {
+    // To satisfy strict compiler we need to cast Function(T) to Function(Object)
+    _typesToDispose[T] = (Object o) => disposeFunc(o);
   }
 
   bool has<T>() => _resolvers.containsKey(T);
@@ -37,8 +45,28 @@ class DiContainer {
   T tryResolve<T>() {
     final resolver = _resolvers[T];
 
-    return resolver != null
-      ? resolver.resolve()
-      : parent?.tryResolve();
+    if (resolver != null) {
+      final resolved = resolver.resolve();
+      if (_typesToDispose.containsKey(T)) _addDisposable<T>(resolved);
+
+      return resolved;
+    } else {
+      return parent?.tryResolve();
+    }
+  }
+
+  void _addDisposable<T>(T resolved) {
+    final disposable = Disposable.from(
+      object: resolved, dispose: _typesToDispose[T]);
+    final disposablesList = _disposables[T];
+    if (disposablesList != null) {
+      disposablesList.add(disposable);
+    } else {
+      _disposables[T] = [ disposable ];
+    }
+  }
+
+  void dispose() {
+    _disposables.values.expand((v) => v).forEach((d) => d.dispose());
   }
 }

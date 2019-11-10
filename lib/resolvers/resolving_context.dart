@@ -31,8 +31,10 @@ class ResolvingContext<T> extends Resolver<T> {
     return this;
   }
 
-  @override
-  void onRegister() => _resolver.onRegister();
+  ResolvingContext<T> withDispose<TImpl extends T>(void Function(TImpl) dispose) {
+    _container.addDispose<T>(dispose);
+    return this;
+  }
 
   @override
   T resolve() {
