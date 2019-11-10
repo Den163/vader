@@ -1,5 +1,3 @@
-library disposable;
-
 import 'dart:async';
 import 'package:meta/meta.dart';
 
