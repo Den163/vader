@@ -58,6 +58,7 @@ class ServiceC {
 ## TODO:
 1. Add flutter bindings (via provider package or standalone?)
 2. Add async resolving support
+3. Improve perfomance
 
 ## Getting Started
 
