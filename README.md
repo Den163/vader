@@ -1,6 +1,6 @@
 # veider
 
-A simple dependency injection library for personal needs inspired by C# ninject fluent builder style
+A simple dependency injection library for personal needs inspired by C# ninject fluent builder style. Now it's just a some kind of an experiment and doesn't at production-ready stage 
 
 Example (from ```example_test.dart```): 
 
