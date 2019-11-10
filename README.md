@@ -12,6 +12,7 @@ void main() {
   test('Module resolves all dependencies', () {
     const expectedResult = 'ABC';
     final module = new ModuleA();
+    
     module.install();
     final resolvedService = module.resolve<ServiceA>();
 
