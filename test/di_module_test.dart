@@ -4,17 +4,6 @@ import 'package:veider/veider.dart';
 
 
 void main() {
-  test('Bind without any else actions throws exception', () {
-    final module = new ModuleMock();
-    when(module.register())
-      .thenAnswer((_) => module.bind<A>());
-
-    expect(
-      () => module.install(),
-      throwsA(isInstanceOf<StateError>())
-    );
-  });
-
   test('Bind to the value resolves with value', () {
     final b = new B();
     final module = new ModuleMock();
@@ -83,30 +72,6 @@ void main() {
     final a = moduleB.resolve<A>();
 
     expect(b, a);
-  });
-
-  test('To binds interface to another type of instance resolved earlier', () {
-    final containerA = new DiContainer();
-    final moduleA = new ModuleMock(containerA);
-    when(moduleA.register())
-      .thenAnswer((_) {
-        moduleA.bind<A>().toValue(new B());
-        moduleA.bind<C>().toValue(new C());
-    });
-
-    final moduleB = new ModuleMock(new DiContainer(containerA));
-    when(moduleB.register())
-      .thenAnswer((_) {
-        moduleB.bind<A>().to<C>();
-      });
-
-    moduleA.install();
-    moduleB.install();
-
-    expect(
-      moduleB.resolve<A>(),
-      isInstanceOf<C>()
-    );
   });
 }
 

@@ -1,5 +1,5 @@
 import 'package:veider/resolvers/resolvers.dart';
-import 'package:veider/resolvers/to_resolver.dart';
+import 'package:veider/resolvers/singleton_resolver.dart';
 import 'package:veider/resolvers/value_resolver.dart';
 import 'package:veider/src/di_container.dart';
 
@@ -15,11 +15,6 @@ class ResolvingContext<T> extends Resolver<T> {
     _container.add(this);
   }
 
-  ResolvingContext<T> to<TImpl extends T>() {
-    _resolver = new ToResolver<T, TImpl>(_container);
-    return this;
-  }
-
   ResolvingContext<T> toValue<TImpl extends T>(TImpl value) {
     _resolver = new ValueResolver<TImpl>(value);
     return this;
@@ -33,6 +28,14 @@ class ResolvingContext<T> extends Resolver<T> {
 
   ResolvingContext<T> withDispose<TImpl extends T>(void Function(TImpl) dispose) {
     _container.addDispose<T>(dispose);
+    return this;
+  }
+
+  ResolvingContext<T> asSingleton() {
+    if (_resolver == null)
+      throw StateError('Can\'t make singleton from null resolver');
+
+    _resolver = new SingletonResolver(_resolver);
     return this;
   }
 

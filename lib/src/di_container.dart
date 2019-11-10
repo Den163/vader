@@ -16,12 +16,21 @@ class DiContainer {
   /// Note that value overwriting within same container is prohibited
   void add<T>(Resolver<T> context) {
     if (hasInTree<T>())
-      throw StateError('Dependency of type `$T` is already exist in container');
+      throw StateError('Dependency of type `$T` is already exist in containers tree');
 
     _resolvers[T] = context;
   }
 
+  void override<T>(Resolver<T> context) {
+    _resolvers[T] = context;
+  }
+
   void addDispose<T>(void Function(T) disposeFunc) {
+    if (_typesToDispose.containsKey(T)) {
+      throw StateError('Dispose for dependency of type `$T` '
+                       'is already defined in the container');
+    }
+
     // To satisfy strict compiler we need to cast Function(T) to Function(Object)
     _typesToDispose[T] = (Object o) => disposeFunc(o);
   }
