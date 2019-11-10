@@ -72,20 +72,6 @@ void main() {
     );
   });
 
-  test('Bind to the lazy resolves value after resolve() call', () {
-    final module = new ModuleMock();
-    final spy = new SpyMock();
-    when(module.register())
-      .thenAnswer((_) {
-        module.bind<SpyMock>().toPureFactory(() => spy..onFactory()).lazy();
-      });
-    module.install();
-
-    expect(spy.counter, 0);
-    module.resolve<SpyMock>();
-    expect(spy.counter, 1);
-  });
-
   test('Child container can resolve parent container\'s value', () {
     final moduleA = new ModuleMock();
     final b = new B();
@@ -122,21 +108,6 @@ void main() {
       moduleB.resolve<A>(),
       isInstanceOf<C>()
     );
-  });
-
-  test('All resolving values will dipose while module disposing', () {
-    final module = new ModuleMock();
-    final spy = new SpyMock();
-
-    when(module.register()).thenAnswer(
-      (_) => module.bind<Spy>()
-                   .toPureFactory<SpyMock>(() => spy)
-    );
-
-    module.install();
-    module.dispose();
-
-    expect(spy.disposed, true);
   });
 }
 

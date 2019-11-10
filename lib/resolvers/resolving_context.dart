@@ -5,7 +5,6 @@ import 'package:veider/src/di_container.dart';
 
 import 'di_resolver.dart';
 import 'factory_resolver.dart';
-import 'lazy_resolver.dart';
 
 /// Facade with factories for all other resolvers
 class ResolvingContext<T> extends Resolver<T> {
@@ -29,12 +28,6 @@ class ResolvingContext<T> extends Resolver<T> {
   // Create factory resolver without any dependencies
   ResolvingContext<T> toPureFactory<TImpl extends T>(TImpl Function() factory) {
     _resolver = new FactoryResolver<TImpl>(factory);
-    return this;
-  }
-
-  ResolvingContext<T> lazy<TImpl extends T>() {
-    verify();
-    _resolver = new LazyResolver(_resolver);
     return this;
   }
 

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mockito/mockito.dart' as mockito;
 import 'package:veider/resolvers/resolvers.dart';
 
 void main() {
@@ -24,62 +24,32 @@ void main() {
     );
   });
 
-  test('Factory creates immediatly, without waiting for resolve() call', () {
+  test('Factory creates value only after resolve() call', () {
     final spy = new SpyMock();
     final factoryResolver = new FactoryResolver(() => spy.onFactory());
     factoryResolver.onRegister();
 
-    expect(spy.counter, 1);
+    mockito.verifyNever(spy.onFactory());
+    factoryResolver.resolve();
+    mockito.verify(spy.onFactory());
   });
 
-  test('Factory resolver resolves same value after multiple resolve() calls', () {
+  test('Not singleton resolver resolves different values after multiple resolve() calls', () {
     final spy = new SpyMock();
     final factoryResolver = new FactoryResolver(() => spy.onFactory());
     factoryResolver.onRegister();
 
-    factoryResolver.resolve();
-    factoryResolver.resolve();
-    factoryResolver.resolve();
+    const callCount = 3;
 
-    expect(spy.counter, 1);
-  });
+    for (var i = 0; i < 3; i++) factoryResolver.resolve();
 
-  test('Lazy resolver creates value only after resolve() call', () {
-    final spy = new SpyMock();
-    final factoryResolver = new FactoryResolver(() => spy.onFactory());
-    final lazyResolver = new LazyResolver(factoryResolver);
-
-    expect(spy.counter, 0);
-    lazyResolver.resolve();
-    expect(spy.counter, 1);
-  });
-
-  test('Lazy resolver resolves same value after multiple resolve() call', () {
-    final spy = new SpyMock();
-    final factoryResolver = new FactoryResolver(() => spy.onFactory());
-    final lazyResolver = new LazyResolver(factoryResolver);
-
-    lazyResolver.resolve();
-    lazyResolver.resolve();
-    lazyResolver.resolve();
-
-    expect(spy.counter, 1);
+    mockito.verify(spy.onFactory()).called(callCount);
   });
 }
 
 
 abstract class Spy {
-  int get counter;
-  bool get disposed;
   void onFactory();
+  void dispose();
 }
-class SpyMock extends Mock  implements Spy {
-  @override int get counter => _counter;
-  @override bool get disposed => _disposed;
-
-  var _counter = 0;
-  var _disposed = false;
-
-  void onFactory() => _counter++;
-  void dispose() => _disposed = true;
-}
+class SpyMock extends mockito.Mock implements Spy {}

@@ -23,12 +23,8 @@ abstract class DiModule {
   /// configured in the register method
   void install() {
      register();
-     container.onRegister();
   }
 
   /// Delegates dependency resolving to the DiContainer
   T resolve<T>() => container.resolve<T>();
-
-
-  void dispose() => container.dispose();
 }
