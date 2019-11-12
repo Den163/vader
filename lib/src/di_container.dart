@@ -1,5 +1,5 @@
-import 'package:veider/resolvers/resolvers.dart';
-import 'package:veider/src/utils/disposable.dart';
+import 'package:vader/resolvers/resolvers.dart';
+import 'package:vader/src/utils/disposable.dart';
 
 /// DiContainer is a data structure that keep all dependencies resolvers
 class DiContainer {
