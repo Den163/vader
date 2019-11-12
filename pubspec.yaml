@@ -1,6 +1,6 @@
 name: vader
-description: A simple dependency injection library for personal needs
-version: 0.0.1
+description: A simple dependency injection library for personal needs inspired by C# ninject fluent builder style.
+version: 0.0.2
 author: "Den163 <abramov.denis163@gmail.com>"
 homepage: https://github.com/Den163/vader_dart
 
