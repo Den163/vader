@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:veider/veider.dart';
-
+import 'package:vader/vader.dart';
 
 void main() {
   test('Bind to the value resolves with value', () {

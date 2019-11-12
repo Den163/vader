@@ -1,4 +1,4 @@
-import 'package:veider/resolvers/di_resolver.dart';
+import 'package:vader/resolvers/di_resolver.dart';
 
 class SingletonResolver<T> extends Resolver<T> {
   final Resolver<T> _decoratedResolver;
