@@ -1,8 +1,8 @@
-name: veider
+name: vader
 description: A simple dependency injection library for personal needs
 version: 0.0.1
 author: "Den163 <abramov.denis163@gmail.com>"
-homepage: https://github.com/Den163/veider_dart
+homepage: https://github.com/Den163/vader_dart
 
 environment:
   sdk: ">=2.2.0 <3.0.0"

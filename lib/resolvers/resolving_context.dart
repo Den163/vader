@@ -1,7 +1,7 @@
-import 'package:veider/resolvers/resolvers.dart';
-import 'package:veider/resolvers/singleton_resolver.dart';
-import 'package:veider/resolvers/value_resolver.dart';
-import 'package:veider/src/di_container.dart';
+import 'package:vader/resolvers/resolvers.dart';
+import 'package:vader/resolvers/singleton_resolver.dart';
+import 'package:vader/resolvers/value_resolver.dart';
+import 'package:vader/src/di_container.dart';
 
 import 'di_resolver.dart';
 import 'factory_resolver.dart';

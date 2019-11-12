@@ -1,4 +1,4 @@
-# veider
+# vader
 
 A simple dependency injection library for personal needs inspired by C# ninject fluent builder style. Now it's just a some kind of an experiment and doesn't at production-ready stage 
 
@@ -6,7 +6,7 @@ Example (from ```example_test.dart```):
 
 ```dart
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veider/veider.dart';
+import 'package:vader/vader.dart';
 
 void main() {
   test('Module resolves all dependencies', () {
