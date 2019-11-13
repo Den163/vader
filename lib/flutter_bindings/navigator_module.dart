@@ -6,17 +6,18 @@ import 'package:vader/src/di_module.dart';
 class NavigatorModule extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;
   final NavigatorRoutes routes;
-  final DiModule diModule;
+  final DiModule Function(BuildContext context) diModuleBuilder;
 
   const NavigatorModule({
     Key key,
     @required this.navigatorKey,
     @required this.routes,
-    @required this.diModule}) : super(key: key);
+    @required this.diModuleBuilder}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Provider<DiModule>(
+      builder: diModuleBuilder,
       child: WillPopScope(
         onWillPop: () => navigatorKey.currentState.maybePop(),
         child: Navigator(
