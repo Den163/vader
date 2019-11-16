@@ -135,7 +135,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.6"
-  vader:
+  vader_di:
     dependency: "direct main"
     description:
       path: ".."

@@ -1,6 +1,6 @@
-library vader;
+library vader_di;
 
-export 'package:vader/src/di_container.dart';
-export 'package:vader/src/di_module.dart';
-export 'package:vader/resolvers/resolvers.dart';
-export 'package:vader/src/utils/disposable.dart';
+export 'package:vader_di/src/di_container.dart';
+export 'package:vader_di/src/di_module.dart';
+export 'package:vader_di/resolvers/resolvers.dart';
+export 'package:vader_di/src/utils/disposable.dart';

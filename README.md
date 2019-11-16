@@ -1,4 +1,4 @@
-# vader
+# vader_di
 
 A simple dependency injection library for personal needs inspired by C# ninject fluent builder style. Now it's just a some kind of an experiment and doesn't at production-ready stage 
 
@@ -7,7 +7,7 @@ Example (from ```example.dart```):
 ```dart
 import 'dart:async';
 import 'package:meta/meta.dart';
-import 'package:vader/vader.dart';
+import 'package:vader_di/vader_di.dart';
 
 void main() async {
   final dataModule = new DataModule();

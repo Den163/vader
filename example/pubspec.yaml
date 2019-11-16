@@ -1,7 +1,7 @@
 name: example
 version: 1.0.0
 author: "Den163 <abramov.denis163@gmail.com>"
-homepage: https://github.com/Den163/vader
+homepage: https://github.com/Den163/vader_di
 
 environment:
   sdk: ">=2.2.0 <3.0.0"
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  vader:
+  vader_di:
     path: ../
   
 dev_dependencies:

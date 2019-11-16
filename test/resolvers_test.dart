@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart' as mockito;
-import 'package:vader/resolvers/resolvers.dart';
-import 'package:vader/resolvers/singleton_resolver.dart';
+import 'package:vader_di/resolvers/resolvers.dart';
+import 'package:vader_di/resolvers/singleton_resolver.dart';
 
 void main() {
   test('Value resolver resolves with selected value', () {

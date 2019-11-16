@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:vader/resolvers/resolvers.dart';
-import 'package:vader/src/di_container.dart';
-import 'package:vader/src/utils/disposable.dart';
+import 'package:vader_di/resolvers/resolvers.dart';
+import 'package:vader_di/src/di_container.dart';
+import 'package:vader_di/src/utils/disposable.dart';
 
 void main() {
   group('Without parent', () {

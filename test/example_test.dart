@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vader/vader.dart';
+import 'package:vader_di/vader.dart';
 
 void main() {
   test('Module resolves all dependencies', () {

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:meta/meta.dart';
-import 'package:vader/vader.dart';
+import 'package:vader_di/vader.dart';
 
 void main() async {
   final dataModule = new DataModule();

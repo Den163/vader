@@ -1,6 +1,6 @@
-import 'package:vader/src/di_container.dart';
+import 'package:vader_di/src/di_container.dart';
 import 'package:meta/meta.dart';
-import 'package:vader/resolvers/resolving_context.dart';
+import 'package:vader_di/resolvers/resolving_context.dart';
 
 /// DiModule is an abstraction for user extension, that defines all dependencies
 /// in register() method
