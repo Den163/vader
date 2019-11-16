@@ -11,5 +11,6 @@
 - Updated example
 
 ## [0.0.3] - 2019/11/16
+## [0.0.3+2] - 2019/11/16
 
 - Project renamed to vader_di to avoid conflits with another packages
