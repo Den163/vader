@@ -4,8 +4,12 @@ import 'package:vader_di/vader.dart';
 void main() {
   test('Module resolves all dependencies', () {
     const expectedResult = 'ABC';
-    final module = new ModuleA();
-    module.install();
+    final module = new DiModule()
+      ..bind<ServiceB>().toValue(new ServiceB())
+      ..bind<ServiceC>().toValue(new ServiceC())
+      ..bind<ServiceA>().toFactory2<ServiceB, ServiceC>(
+          (b, c) => ServiceAImplementation(b, c));
+
     final resolvedService = module.resolve<ServiceA>();
 
     expect(
@@ -13,16 +17,6 @@ void main() {
       expectedResult
     );
   });
-}
-
-class ModuleA extends DiModule {
-  @override
-  void register() {
-    bind<ServiceB>().toValue(new ServiceB());
-    bind<ServiceC>().toValue(new ServiceC());
-    bind<ServiceA>().toFactory2<ServiceB, ServiceC>(
-      (b, c) => ServiceAImplementation(b, c));
-  }
 }
 
 abstract class ServiceA {

@@ -8,7 +8,7 @@ class DiContainer {
   final _disposables = <Type, List<Disposable>> {};
 
   DiContainer get parent => _parent;
-  DiContainer _parent;
+  final DiContainer _parent;
 
   DiContainer([this._parent]);
 
