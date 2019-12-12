@@ -1,10 +1,9 @@
 import 'package:vader_di/src/di_container.dart';
-import 'package:meta/meta.dart';
 import 'package:vader_di/resolvers/resolving_context.dart';
 
 /// DiModule is an abstraction for user extension, that defines all dependencies
 /// in register() method
-abstract class DiModule {
+class DiModule {
   final DiContainer container;
 
   DiModule([DiContainer container]) :
@@ -12,17 +11,8 @@ abstract class DiModule {
 
   /// Return resolving context that helps
   /// define dependencies in fluent builder style
-  @visibleForTesting @protected ResolvingContext<T> bind<T>() {
+  ResolvingContext<T> bind<T>() {
     return new ResolvingContext<T>(container);
-  }
-
-  /// In this method override user configure all dependencies for the module
-  @visibleForTesting @protected void register();
-
-  /// Method for user code all other libraries to install all dependencies
-  /// configured in the register method
-  void install() {
-     register();
   }
 
   /// Delegates dependency resolving to the DiContainer
