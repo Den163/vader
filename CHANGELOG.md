@@ -1,4 +1,4 @@
-## [0.1.0] - 2019/12/12
+## [0.1.1] - 2019/12/12
 
 Updated API, tests and documentation. Breaking change - 
 DiModule now doesn't need to be subclassed
