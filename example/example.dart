@@ -3,8 +3,10 @@ import 'package:meta/meta.dart';
 import 'package:vader_di/vader.dart';
 
 void main() async {
-  final dataModule = new DataModule();
-  dataModule.install();
+  final dataModule = new DiModule()
+    ..bind<ApiClient>().toValue(new ApiClientMock())
+    ..bind<DataService>().toFactory1<ApiClient>((c) => new NetworkDataService(c))
+    ..bind<DataBloc>().toFactory1<DataService>((s) => new DataBloc(s));
 
   final dataBloc = dataModule.resolve<DataBloc>();
   dataBloc.data.listen(
@@ -14,15 +16,6 @@ void main() async {
   );
 
   await dataBloc.fetchData();
-}
-
-class DataModule extends DiModule {
-  @override
-  void register() {
-    bind<ApiClient>().toValue(new ApiClientMock());
-    bind<DataService>().toFactory1<ApiClient>((c) => new NetworkDataService(c));
-    bind<DataBloc>().toFactory1<DataService>((s) => new DataBloc(s));
-  }
 }
 
 class DataBloc {
