@@ -1,6 +1,8 @@
 # vader_di
 
-A simple dependency injection library for personal needs inspired by C# ninject fluent builder style. Now it's just a some kind of an experiment and doesn't at production-ready stage 
+A simple dependency injection library for personal needs inspired by C# ninject fluent builder style. Now it's just a some kind of an experiment and doesn't at production-ready stage.
+
+If you need a Flutter integration look for package [vader_flutter](https://pub.dev/packages/vader_flutter)
 
 Example (from ```example.dart```): 
 
