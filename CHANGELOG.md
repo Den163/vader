@@ -1,3 +1,7 @@
+## [0.2.0] - 2019/12/25
+
+Improved typings
+
 ## [0.1.2] - 2019/12/12
 
 Updated API, tests and documentation. Breaking change - 

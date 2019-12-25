@@ -1,6 +1,7 @@
 name: vader_di
 description: A simple dependency injection library for personal needs inspired by C# ninject fluent builder style.
-version: 0.1.2
+version: 0.2.0
+author: Den163 <abramov.denis163@gmail.com>
 homepage: https://github.com/Den163/vader
 
 environment:
