@@ -54,7 +54,7 @@ class ResolvingContext<T> extends Resolver<T> {
   }
 
   /// Create factory resolver with 1 dependency
-  ResolvingContext toFactory1<T1>(T Function(T1) factory) {
+  ResolvingContext<T> toFactory1<T1>(T Function(T1) factory) {
     _resolver = new FactoryResolver(
         () => factory(_container.resolve<T1>())
     );
@@ -62,7 +62,7 @@ class ResolvingContext<T> extends Resolver<T> {
   }
 
   /// Create factory resolver with 2 dependencies
-  ResolvingContext toFactory2<T1, T2>(T Function(T1, T2) factory) {
+  ResolvingContext<T> toFactory2<T1, T2>(T Function(T1, T2) factory) {
     _resolver = new FactoryResolver(
         () => factory(_container.resolve<T1>(), _container.resolve<T2>())
     );
@@ -70,7 +70,7 @@ class ResolvingContext<T> extends Resolver<T> {
   }
 
   /// Create factory resolver with 3 dependencies
-  ResolvingContext toFactory3<T1, T2, T3>(T Function(T1, T2, T3) factory) {
+  ResolvingContext<T> toFactory3<T1, T2, T3>(T Function(T1, T2, T3) factory) {
     _resolver = new FactoryResolver(
             () => factory(
               _container.resolve<T1>(),
@@ -82,7 +82,7 @@ class ResolvingContext<T> extends Resolver<T> {
   }
 
   /// Create factory resolver with 4 dependencies
-  ResolvingContext toFactory4<T1, T2, T3, T4>(T Function(T1, T2, T3, T4) factory) {
+  ResolvingContext<T> toFactory4<T1, T2, T3, T4>(T Function(T1, T2, T3, T4) factory) {
     _resolver = new FactoryResolver(
             () => factory(
             _container.resolve<T1>(),
@@ -95,7 +95,7 @@ class ResolvingContext<T> extends Resolver<T> {
   }
 
   /// Create factory resolver with 5 dependencies
-  ResolvingContext toFactory5<T1, T2, T3, T4, T5>(T Function(T1, T2, T3, T4, T5) factory) {
+  ResolvingContext<T> toFactory5<T1, T2, T3, T4, T5>(T Function(T1, T2, T3, T4, T5) factory) {
     _resolver = new FactoryResolver(
             () => factory(
           _container.resolve<T1>(),
@@ -109,7 +109,7 @@ class ResolvingContext<T> extends Resolver<T> {
   }
 
   /// Create factory resolver with 6 dependencies
-  ResolvingContext toFactory6<T1, T2, T3, T4, T5, T6>(
+  ResolvingContext<T> toFactory6<T1, T2, T3, T4, T5, T6>(
       T Function(T1, T2, T3, T4, T5, T6) factory
   ) {
     _resolver = new FactoryResolver(
@@ -126,7 +126,7 @@ class ResolvingContext<T> extends Resolver<T> {
   }
 
   /// Create factory resolver with 7 dependencies
-  ResolvingContext toFactory7<T1, T2, T3, T4, T5, T6, T7>(
+  ResolvingContext<T> toFactory7<T1, T2, T3, T4, T5, T6, T7>(
       T Function(T1, T2, T3, T4, T5, T6, T7) factory
       ) {
     _resolver = new FactoryResolver(
@@ -144,7 +144,7 @@ class ResolvingContext<T> extends Resolver<T> {
   }
 
   /// Create factory resolver with 8 dependencies
-  ResolvingContext toFactory8<T1, T2, T3, T4, T5, T6, T7, T8>(
+  ResolvingContext<T> toFactory8<T1, T2, T3, T4, T5, T6, T7, T8>(
       T Function(T1, T2, T3, T4, T5, T6, T7, T8) factory
       ) {
     _resolver = new FactoryResolver(
