@@ -26,7 +26,7 @@ class ResolvingContext<T> extends Resolver<T> {
     return this;
   }
 
-  ResolvingContext<T> withDispose<TImpl extends T>(void Function(TImpl) dispose) {
+  ResolvingContext<T> withDispose(void Function(T) dispose) {
     _container.addDispose<T>(dispose);
     return this;
   }
