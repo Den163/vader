@@ -5,13 +5,14 @@ author: Den163 <abramov.denis163@gmail.com>
 homepage: https://github.com/Den163/vader
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
+  disposable_utils: ^1.2.0
     
-  meta: ^1.1.7
+  meta: ^1.1.8
 
 dev_dependencies:
   flutter_test:
