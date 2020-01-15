@@ -1,3 +1,8 @@
+## [0.2.2] - 2020/01/14
+
+Updated sdk constraints to Dart 2.7.0
+Moved disposable utils to separate library
+
 ## [0.2.2] - 2019/12/25
 
 Improved typings
