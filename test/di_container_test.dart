@@ -1,8 +1,8 @@
+import 'package:disposable_utils/disposable.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:vader_di/resolvers/resolvers.dart';
 import 'package:vader_di/src/di_container.dart';
-import 'package:vader_di/src/utils/disposable.dart';
 
 void main() {
   group('Without parent', () {
@@ -137,6 +137,24 @@ void main() {
 
       verifyNever(disposable.dispose());
     });
+
+    test(
+      "Disposing of child container " 
+      "shouldn't dispose parent container's dependencies", () {
+        DiContainer containerA = new DiContainer();
+        DiContainer containerB = DiContainer(containerA);
+
+        final disposableMock = new DisposableMock();
+        final resolver = new ResolvingContext<Disposable>(containerA);
+        resolver.toValue(disposableMock)
+          .withDispose((mock) => mock.dispose())
+          .asSingleton();
+
+        containerB.resolve<Disposable>();
+        containerB.dispose();
+
+        verifyNever(disposableMock.dispose());
+      });
   });
 }
 

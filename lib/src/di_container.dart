@@ -1,5 +1,5 @@
+import 'package:disposable_utils/disposable.dart';
 import 'package:vader_di/resolvers/resolvers.dart';
-import 'package:vader_di/src/utils/disposable.dart';
 
 /// DiContainer is a data structure that keep all dependencies resolvers
 class DiContainer {
@@ -65,8 +65,8 @@ class DiContainer {
   }
 
   void _addDisposable<T>(T resolved) {
-    final disposable = Disposable.from(
-      object: resolved, dispose: _typesToDispose[T]);
+    final disposable = Disposable.create(
+      resolved, _typesToDispose[T]);
     final disposablesList = _disposables[T];
     if (disposablesList != null) {
       disposablesList.add(disposable);
