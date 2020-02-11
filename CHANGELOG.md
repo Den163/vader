@@ -1,3 +1,7 @@
+## [1.0.0] - 2020/02/10
+
+Added documentation, simplified API (NOTE! Breaking changes)
+
 ## [0.3.1] - 2020/01/14
 
 Updated sdk constraints to Dart 2.7.0
