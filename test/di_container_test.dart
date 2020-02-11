@@ -1,17 +1,15 @@
-import 'package:disposable_utils/disposable.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:vader_di/resolvers/resolvers.dart';
-import 'package:vader_di/src/di_container.dart';
+import 'package:vader_di/vader.dart';
 
 void main() {
   group('Without parent', () {
     test('Container add<T> throws state error if it\'s already has resolver', () {
       final container = new DiContainer();
-      container.add(_makeResolver(5));
+      container.bind<int>().toResolver(_makeResolver(5));
 
       expect(
-        () => container.add(_makeResolver(3)),
+        () => container.bind<int>().toResolver(_makeResolver(3)),
         throwsA(isInstanceOf<StateError>())
       );
     });
@@ -19,7 +17,7 @@ void main() {
     test('Container resolves value after adding a dependency', () {
       const expectedValue = 3;
       final container = new DiContainer();
-      container.add(_makeResolver(expectedValue));
+      container.bind<int>().toResolver(_makeResolver(expectedValue));
       expect(container.resolve<int>(), expectedValue);
     });
 
@@ -33,7 +31,7 @@ void main() {
 
     test('Container has<T>() returns true if it has resolver', () {
       final container = new DiContainer();
-      container.add(_makeResolver(3));
+      container.bind<int>().toResolver(_makeResolver(3));
       expect(container.has<int>(), true);
     });
 
@@ -44,7 +42,7 @@ void main() {
 
     test('Container hasInTree<T> returns true if it has resolver', () {
       final container = new DiContainer();
-      container.add(_makeResolver(3));
+      container.bind<int>().toResolver(_makeResolver(3));
       expect(container.hasInTree<int>(), true);
     });
 
@@ -58,7 +56,9 @@ void main() {
       final container = new DiContainer();
       final disposable = new DisposableMock();
 
-      container.add(_makeResolver<Disposable>(disposable));
+      container.bind<Disposable>().toResolver(
+        _makeResolver<Disposable>(disposable)
+      );
       container.addDispose<Disposable>((disposable) => disposable.dispose());
 
       for (var i = 0; i < resolutionsCount; i++) container.resolve<Disposable>();
@@ -74,10 +74,10 @@ void main() {
       final parentContainer = new DiContainer();
       final container = new DiContainer(parentContainer);
 
-      parentContainer.add(_makeResolver(5));
+      parentContainer.bind<int>().toResolver(_makeResolver(5));
 
       expect(
-        () => container.add(_makeResolver(3)),
+        () => container.bind<int>().toResolver(_makeResolver(3)),
         throwsA(isInstanceOf<StateError>())
       );
     });
@@ -87,7 +87,7 @@ void main() {
       final parentContainer = new DiContainer();
       final container = new DiContainer(parentContainer);
 
-      parentContainer.add(_makeResolver(expectedValue));
+      parentContainer.bind<int>().toResolver(_makeResolver(expectedValue));
 
       expect(container.resolve<int>(), expectedValue);
     });
@@ -104,7 +104,7 @@ void main() {
       final parentContainer = new DiContainer();
       final container = new DiContainer(parentContainer);
 
-      parentContainer.add(_makeResolver(3));
+      parentContainer.bind<int>().toResolver(_makeResolver(3));
 
       expect(container.has<int>(), false);
     });
@@ -118,7 +118,7 @@ void main() {
       final parentContainer = new DiContainer();
       final container = new DiContainer(parentContainer);
 
-      parentContainer.add(_makeResolver(3));
+      parentContainer.bind<int>().toResolver(_makeResolver(3));
 
       expect(container.hasInTree<int>(), true);
     });
@@ -129,7 +129,9 @@ void main() {
       final container = new DiContainer(parentContainer);
 
       final disposable = new DisposableMock();
-      parentContainer.add(_makeResolver<Disposable>(disposable));
+      parentContainer.bind<Disposable>().toResolver(
+        _makeResolver<Disposable>(disposable)
+      );
       parentContainer.addDispose<Disposable>((disposable) => disposable.dispose());
 
       for (var i = 0; i < resolutionsCount; i++) container.resolve<Disposable>();
@@ -145,8 +147,8 @@ void main() {
         DiContainer containerB = DiContainer(containerA);
 
         final disposableMock = new DisposableMock();
-        final resolver = new ResolvingContext<Disposable>(containerA);
-        resolver.toValue(disposableMock)
+        containerA.bind<Disposable>()
+          .toValue(disposableMock)
           .withDispose((mock) => mock.dispose())
           .asSingleton();
 
@@ -155,6 +157,62 @@ void main() {
 
         verifyNever(disposableMock.dispose());
       });
+  });
+
+  test('Bind to the value resolves with value', () {
+    final b = new B();
+    final module = new DiContainer();
+    module.bind<A>().toValue(b);
+
+    expect(
+      module.resolve<A>(),
+      b
+    );
+  });
+
+  test('Bind to the same type in the same container throws error', () {
+    final module = new DiContainer();
+    module.bind<A>().toValue(new B());
+
+    expect(
+        () => module.bind<A>().toValue(new B()),
+      throwsA(isInstanceOf<StateError>())
+    );
+  });
+
+  test('Bind to the factory resolves with value', () {
+    final module = new DiContainer();
+    var b;
+    module.bind<A>().from(() => b = new B());
+
+    expect(
+      module.resolve<A>(),
+      b
+    );
+  });
+
+  test('Bind to the factory1 resolves value with dependency', () {
+    final module = new DiContainer();
+    final b = new B();
+    module.bind<A>().toValue(b);
+    module.bind<DependOnA>().from1<A>((a) => DependOnA(a));
+
+    expect(
+      module.resolve<DependOnA>().a,
+      b
+    );
+  });
+
+  test('Child container can resolve parent container\'s value', () {
+    final moduleA = new DiContainer();
+    final b = new B();
+    moduleA.bind<A>().toValue(b);
+
+    final containerB = new DiContainer(moduleA);
+    final moduleB = new DiContainer(containerB);
+    final a = moduleB.resolve<A>();
+
+    expect(b, a);
   });
 }
 
@@ -165,5 +223,16 @@ ResolverMock<T> _makeResolver<T>(T expectedValue) {
   return resolverMock;
 }
 
+
+
 class ResolverMock<T> extends Mock implements Resolver<T> {}
 class DisposableMock extends Mock implements Disposable {}
+
+abstract class A {}
+class B implements A {}
+
+class DependOnA {
+  final A a;
+
+  DependOnA(this.a) : assert(a != null);
+}
