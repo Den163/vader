@@ -3,7 +3,7 @@ import 'package:vader_di/resolvers/resolvers.dart';
 
 /// DiContainer is a data structure that keep all dependencies resolvers
 class DiContainer {
-  final _resolvers = <Type, Resolver> {};
+  final _resolvers = <Type, ResolvingContext> {};
   final _typesToDispose = <Type, void Function(Object)>{};
   final _disposables = <Type, List<Disposable>> {};
 
@@ -14,17 +14,23 @@ class DiContainer {
 
   /// Adds dependency resolver of type [T] to the container.
   /// Note that value overwriting within same container is prohibited.
-  /// If you need it, please use [override] method instead
-  void add<T>(Resolver<T> context) {
+  /// If you need it, please use [override] method instead.
+  ResolvingContext<T> bind<T>() {
+    final context = new ResolvingContext<T>(this);
     if (hasInTree<T>())
       throw StateError('Dependency of type `$T` is already exist in containers tree');
 
     _resolvers[T] = context;
+
+    return context;
   }
 
   /// Overrides dependency resolver for type [T] in the container
-  void override<T>(Resolver<T> context) {
+  ResolvingContext<T> override<T>() {
+    final context = new ResolvingContext<T>(this);
     _resolvers[T] = context;
+
+    return context;
   }
 
   /// Defines dispose strategy for type [T].

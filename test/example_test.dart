@@ -7,7 +7,7 @@ void main() {
     final module = new DiContainer()
       ..bind<ServiceB>().toValue(new ServiceB())
       ..bind<ServiceC>().toValue(new ServiceC())
-      ..bind<ServiceA>().toFactory2<ServiceB, ServiceC>(
+      ..bind<ServiceA>().from2<ServiceB, ServiceC>(
           (b, c) => ServiceAImplementation(b, c));
 
     final resolvedService = module.resolve<ServiceA>();

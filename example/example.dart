@@ -5,8 +5,8 @@ import 'package:vader_di/vader.dart';
 void main() async {
   final dataModule = new DiContainer()
     ..bind<ApiClient>().toValue(new ApiClientMock())
-    ..bind<DataService>().toFactory1<ApiClient>((c) => new NetworkDataService(c))
-    ..bind<DataBloc>().toFactory1<DataService>((s) => new DataBloc(s));
+    ..bind<DataService>().from1<ApiClient>((c) => new NetworkDataService(c))
+    ..bind<DataBloc>().from1<DataService>((s) => new DataBloc(s));
 
   final dataBloc = dataModule.resolve<DataBloc>();
   dataBloc.data.listen(
