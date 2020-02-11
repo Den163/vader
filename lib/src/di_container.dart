@@ -12,8 +12,9 @@ class DiContainer {
 
   DiContainer([this._parent]);
 
-  /// Add dependency resolver to the container.
-  /// Note that value overwriting within same container is prohibited
+  /// Adds dependency resolver of type [T] to the container.
+  /// Note that value overwriting within same container is prohibited.
+  /// If you need it, please use [override] method instead
   void add<T>(Resolver<T> context) {
     if (hasInTree<T>())
       throw StateError('Dependency of type `$T` is already exist in containers tree');
@@ -21,10 +22,14 @@ class DiContainer {
     _resolvers[T] = context;
   }
 
+  /// Overrides dependency resolver for type [T] in the container
   void override<T>(Resolver<T> context) {
     _resolvers[T] = context;
   }
 
+  /// Defines dispose strategy for type [T].
+  /// (It calls for every resolved dependency of type [T]
+  /// when container's [dispose] was invoked
   void addDispose<T>(void Function(T) disposeFunc) {
     if (_typesToDispose.containsKey(T)) {
       throw StateError('Dispose for dependency of type `$T` '
@@ -35,11 +40,23 @@ class DiContainer {
     _typesToDispose[T] = (Object o) => disposeFunc(o);
   }
 
+  /// Returns true if this container has dependency resolver for type [T}.
+  /// If you want to check it for the whole containers tree,
+  /// use [hasInTree] instead.
   bool has<T>() => _resolvers.containsKey(T);
+
+  /// Returns true if the container
+  /// or it's parents contains dependency resolver for type [T].
+  /// If you want to check it only for this container,
+  /// use [has] instead.
   bool hasInTree<T>() =>
       has<T>() ||
       (_parent != null && _parent.hasInTree<T>());
 
+  /// Returns resolved dependency defined by type parameter [T].
+  /// Throws [StateError] if dependency can't be resolved.
+  /// If you want to get [null] if dependency can't be resolved,
+  /// use [tryResolve] instead
   T resolve<T extends Object>() {
     final resolved = tryResolve<T>();
     if (resolved != null) {
@@ -51,6 +68,8 @@ class DiContainer {
     }
   }
 
+  /// Returns resolved dependency of type [T] or null
+  /// if it can't be resolved.
   T tryResolve<T>() {
     final resolver = _resolvers[T];
 
@@ -75,6 +94,7 @@ class DiContainer {
     }
   }
 
+  /// Disposes all resolved dependencies by the container
   void dispose() {
     _disposables.values.expand((v) => v).forEach((d) => d.dispose());
   }

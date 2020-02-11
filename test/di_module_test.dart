@@ -4,7 +4,7 @@ import 'package:vader_di/vader.dart';
 void main() {
   test('Bind to the value resolves with value', () {
     final b = new B();
-    final module = new DiModule();
+    final module = new DiContainer();
     module.bind<A>().toValue(b);
 
     expect(
@@ -14,7 +14,7 @@ void main() {
   });
 
   test('Bind to the same type in the same container throws error', () {
-    final module = new DiModule();
+    final module = new DiContainer();
     module.bind<A>().toValue(new B());
 
     expect(
@@ -24,7 +24,7 @@ void main() {
   });
 
   test('Bind to the factory resolves with value', () {
-    final module = new DiModule();
+    final module = new DiContainer();
     var b;
     module.bind<A>().toPureFactory(() => b = new B());
 
@@ -35,7 +35,7 @@ void main() {
   });
 
   test('Bind to the factory1 resolves value with dependency', () {
-    final module = new DiModule();
+    final module = new DiContainer();
     final b = new B();
     module.bind<A>().toValue(b);
     module.bind<DependOnA>().toFactory1<A>((a) => DependOnA(a));
@@ -47,12 +47,12 @@ void main() {
   });
 
   test('Child container can resolve parent container\'s value', () {
-    final moduleA = new DiModule();
+    final moduleA = new DiContainer();
     final b = new B();
     moduleA.bind<A>().toValue(b);
 
-    final containerB = new DiContainer(moduleA.container);
-    final moduleB = new DiModule(containerB);
+    final containerB = new DiContainer(moduleA);
+    final moduleB = new DiContainer(containerB);
     final a = moduleB.resolve<A>();
 
     expect(b, a);
