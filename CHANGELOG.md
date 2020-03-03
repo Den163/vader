@@ -1,3 +1,8 @@
+## [1.1.0] - 2020/03/03
+
+New cool feature - Custom Factories. Create objects with parameters which not known at the
+container configuration time
+
 ## [1.0.0] - 2020/02/10
 
 Added documentation, simplified API (NOTE! Breaking changes)
