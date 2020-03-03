@@ -6,6 +6,10 @@ integrate with different approaches to different dart projects
 
 If you need a Flutter integration look for package [vader_flutter] (https://pub.dev/packages/vader_flutter).
 It contains widget wrappers and helpers to work with Inversion of Control principle
+
+### News
+New cool feature - Custom Factories. Create and dispose objects with parameters which not known at the
+container configuration time. Documentation will be soon
  
 ### Getting Started
 The main class for all operations is `DiContainer`. You can register your dependencies by getting
@@ -24,7 +28,7 @@ container.bind <SomeService>().toValue(new SomeServiceImplementation());
 final someService = container.resolve<SomeService>();
 ```
 
-#Lazy construction
+# Lazy construction
 
 Usually you create an instance of some object in the place you really need it. So you can
 use lazy (on demand in other words) construction of the object through `from` method. For example:
@@ -90,7 +94,7 @@ container.bind<SomeService>().from2<A, B>((a, b) => new SomeService(a, b));
 final someService = container.resolve<SomeService>();
 ```
 
-#Instances life time and scopes control
+# Instances life time and scopes control
 
 But what can you do, if you want to create an instance of registered dependency only one time, but
 you need to get/resolve it many times in the container? Singleton pattern? God forbid!
