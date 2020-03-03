@@ -100,8 +100,10 @@ class DiContainer {
     }
   }
 
-  /// Disposes all resolved dependencies by the container
+  /// Disposes all resolved dependencies by the container and clear all dependencies
   void dispose() {
     _disposables.values.expand((v) => v).forEach((d) => d.dispose());
+    _disposables.clear();
+    _resolvers.clear();
   }
 }
