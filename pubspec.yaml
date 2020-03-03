@@ -1,6 +1,6 @@
 name: vader_di
 description: A simple, flexible and platform agnostic Dependency Injection library with convenient syntax.
-version: 1.0.0
+version: 1.1.0
 homepage: https://github.com/Den163/vader
 
 environment:
