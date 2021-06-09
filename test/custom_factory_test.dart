@@ -45,7 +45,7 @@ void main() {
 
 class A {
   final AArgs args;
-  final B b;
+  final B? b;
 
   A(this.args, [this.b]);
 }

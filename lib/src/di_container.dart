@@ -1,4 +1,4 @@
-import 'package:disposable_utils/disposable.dart';
+import 'package:disposable_utils/disposable_utils.dart';
 import 'package:vader_di/resolvers/resolvers.dart';
 
 /// DiContainer is a data structure that keep all dependencies resolvers
@@ -7,8 +7,8 @@ class DiContainer {
   final _typesToDispose = <Type, void Function(Object)>{};
   final _disposables = <Type, List<Disposable>> {};
 
-  DiContainer get parent => _parent;
-  final DiContainer _parent;
+  DiContainer? get parent => _parent;
+  final DiContainer? _parent;
 
   DiContainer([this._parent]);
 
@@ -43,7 +43,7 @@ class DiContainer {
     }
 
     // To satisfy strict compiler we need to cast Function(T) to Function(Object)
-    _typesToDispose[T] = (Object o) => disposeFunc(o);
+    _typesToDispose[T] = (Object o) => disposeFunc(o as T);
   }
 
   /// Returns true if this container has dependency resolver for type [T}.
@@ -57,13 +57,13 @@ class DiContainer {
   /// use [has] instead.
   bool hasInTree<T>() =>
       has<T>() ||
-      (_parent != null && _parent.hasInTree<T>());
+      (_parent?.hasInTree<T>() ?? false);
 
   /// Returns resolved dependency defined by type parameter [T].
   /// Throws [StateError] if dependency can't be resolved.
   /// If you want to get [null] if dependency can't be resolved,
   /// use [tryResolve] instead
-  T resolve<T extends Object>() {
+  T resolve<T>() {
     final resolved = tryResolve<T>();
     if (resolved != null) {
       return resolved;
@@ -76,7 +76,7 @@ class DiContainer {
 
   /// Returns resolved dependency of type [T] or null
   /// if it can't be resolved.
-  T tryResolve<T>() {
+  T? tryResolve<T>() {
     final resolver = _resolvers[T];
 
     if (resolver != null) {
@@ -91,7 +91,7 @@ class DiContainer {
 
   void _addDisposable<T>(T resolved) {
     final disposable = Disposable.create(
-      resolved, _typesToDispose[T]);
+      resolved, _typesToDispose[T] as void Function(T));
     final disposablesList = _disposables[T];
     if (disposablesList != null) {
       disposablesList.add(disposable);

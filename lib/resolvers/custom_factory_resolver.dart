@@ -7,9 +7,8 @@ import 'di_resolver.dart';
 class CustomFactoryResolver<T, TArgs>
 extends Resolver<CustomFactory<T, TArgs>>
 implements CustomFactory<T, TArgs> {
-  TArgs _args;
-
-  FactoryResolver<T> _factoryResolver;
+  late TArgs _args;
+  late FactoryResolver<T> _factoryResolver;
 
   CustomFactoryResolver(T Function(TArgs) factory) {
     // It takes _args in closure to allow assign it later and send to factory

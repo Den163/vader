@@ -9,7 +9,7 @@ class ResolvingContext<T> extends Resolver<T> {
   Resolver<T> get resolver => _resolver;
   final DiContainer container;
 
-  Resolver<T> _resolver;
+  late Resolver<T> _resolver;
 
   ResolvingContext(this.container);
 

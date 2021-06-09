@@ -1,3 +1,6 @@
+## [1.2.0] - 2021/06/09
+Updated to the dart 2.13.1. Updated dependencies. Added null safety support. Updated tests
+
 ## [1.1.0] - 2020/03/03
 
 New cool feature - Custom Factories. Create objects with parameters which not known at the
